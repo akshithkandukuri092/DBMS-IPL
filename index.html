@@ -4,167 +4,247 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPL Database Project Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1d3557;
-            --secondary: #e63946;
-            --light: #f1faee;
-            --dark: #1e293b;
+            --primary: #181842; /* IPL Dark Blue */
+            --secondary: #ef4123; /* IPL Red/Orange */
+            --accent: #f7a72c; /* Trophy Gold */
+            --light: #f4f6f8;
             --sidebar-width: 280px;
-            --code-bg: #1e1e1e;
-            --code-text: #d4d4d4;
+            --code-bg: #0f172a;
+            --code-text: #e2e8f0;
+            --glass: rgba(255, 255, 255, 0.95);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
             display: flex;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
             color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- FLOATING BACKGROUND ANIMATION --- */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-item {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); }
+            100% { transform: translateY(-10vh) rotate(360deg); }
         }
 
         /* --- SIDEBAR NAVIGATION --- */
         .sidebar {
             width: var(--sidebar-width);
             height: 100vh;
-            background-color: var(--primary);
+            background: linear-gradient(180deg, var(--primary) 0%, #0d0d25 100%);
             color: white;
             position: fixed;
             top: 0;
             left: 0;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
-            border-right: 1px solid rgba(255,255,255,0.1);
+            border-right: 4px solid var(--accent);
+            z-index: 100;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.3);
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            color: var(--light);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 40px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            text-shadow: 2px 2px 0px var(--secondary);
         }
 
-        .logo span { color: var(--secondary); }
+        .logo span { color: var(--accent); }
 
         .nav-links a {
             display: block;
-            color: #cbd5e1;
+            color: #a0aec0;
             text-decoration: none;
-            padding: 10px 15px;
-            margin-bottom: 5px;
-            border-radius: 6px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
             transition: all 0.3s;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
         }
 
         .nav-links a:hover, .nav-links a.active {
-            background-color: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.1);
             color: white;
+            border-left: 3px solid var(--accent);
             padding-left: 20px;
         }
 
         .team-section {
-            margin-top: 40px;
-            font-size: 0.85rem;
-            color: #94a3b8;
-        }
-
-        .team-list {
-            margin-top: 10px;
-            list-style: none;
+            margin-top: 50px;
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
-        .team-list li { margin-bottom: 5px; }
+        .team-section strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .team-list { list-style: none; }
+        .team-list li { margin-bottom: 8px; font-size: 0.9rem; display: flex; align-items: center; }
+        .team-list li::before { content: '🏏'; margin-right: 10px; font-size: 0.8rem; }
 
         /* --- MAIN CONTENT --- */
         .main-content {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
             padding: 40px 60px;
+            position: relative;
+            z-index: 1;
         }
 
         section {
             margin-bottom: 60px;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: var(--glass);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid var(--primary);
+            backdrop-filter: blur(10px);
             scroll-margin-top: 20px;
         }
 
-        h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
-        h2 { font-size: 1.8rem; color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-        h3 { font-size: 1.3rem; color: var(--secondary); margin: 25px 0 10px 0; }
-        p, li { line-height: 1.7; color: #475569; margin-bottom: 10px; }
-        ul { margin-left: 20px; margin-bottom: 20px; }
+        h1 { font-size: 3rem; color: var(--primary); margin-bottom: 15px; line-height: 1.2; }
+        h2 { font-size: 2rem; color: var(--primary); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px solid #e2e8f0; }
+        h3 { font-size: 1.4rem; color: var(--secondary); margin: 30px 0 15px 0; font-weight: 700; }
+        p, li { line-height: 1.8; color: #4a5568; margin-bottom: 15px; font-size: 1.05rem; }
+        ul { margin-left: 25px; margin-bottom: 25px; }
+
+        /* Hero Image Area */
+        .hero-banner {
+            width: 100%;
+            height: 250px;
+            background-image: url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=2067&auto=format&fit=crop'); /* Cricket Stadium */
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top:0; left:0; width:100%; height:100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.6));
+            border-radius: 15px;
+        }
 
         /* Tables */
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
             font-size: 0.95rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid #e2e8f0;
-            text-align: left;
-        }
-
-        th { background-color: #f1f5f9; color: var(--primary); font-weight: 600; }
+        th, td { padding: 15px 20px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        th { background-color: var(--primary); color: white; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        tr:last-child td { border-bottom: none; }
         tr:nth-child(even) { background-color: #f8fafc; }
+        tr:hover { background-color: #f1f5f9; }
+
+        /* ER Diagram Image Styling */
+        .er-container {
+            width: 100%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px dashed var(--primary);
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .er-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
 
         /* Code Blocks */
         pre {
             background-color: var(--code-bg);
             color: var(--code-text);
-            padding: 20px;
-            border-radius: 8px;
+            padding: 25px;
+            border-radius: 12px;
             overflow-x: auto;
-            margin: 15px 0;
-            border-left: 5px solid var(--secondary);
-        }
-
-        code { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9rem; }
-
-        .keyword { color: #569cd6; } /* SQL Blue */
-        .string { color: #ce9178; }  /* String Red */
-        .func { color: #dcdcaa; }    /* Function Yellow */
-
-        /* ER Diagram Placeholder */
-        .er-placeholder {
-            width: 100%;
-            height: 300px;
-            background-color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            border: 2px dashed #94a3b8;
-            color: #64748b;
-            font-weight: bold;
             margin: 20px 0;
+            border-left: 6px solid var(--accent);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
+
+        code { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.95rem; }
+        .keyword { color: #569cd6; } 
+        .string { color: #ce9178; } 
+        .func { color: #dcdcaa; }
 
         /* Responsive */
         @media (max-width: 900px) {
-            .sidebar { width: 100%; height: auto; position: relative; }
+            .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 4px solid var(--accent); }
             .main-content { margin-left: 0; width: 100%; padding: 20px; }
+            h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
+    <div class="background-animation">
+        <div class="floating-item" style="left: 10%; animation-duration: 20s; font-size: 3rem;">🏏</div>
+        <div class="floating-item" style="left: 30%; animation-duration: 25s; font-size: 2rem;">🏆</div>
+        <div class="floating-item" style="left: 60%; animation-duration: 18s; font-size: 4rem;">⚾</div>
+        <div class="floating-item" style="left: 80%; animation-duration: 22s; font-size: 2.5rem;">🏟️</div>
+        <div class="floating-item" style="left: 50%; animation-duration: 30s; font-size: 3rem;">🧢</div>
+    </div>
+
     <aside class="sidebar">
-        <div class="logo">IPL<span>DB</span> Docs</div>
+        <div class="logo">IPL<span>DB</span></div>
         <nav class="nav-links">
             <a href="#intro">Introduction</a>
             <a href="#scope">Scope & Objectives</a>
@@ -178,10 +258,10 @@
         <div class="team-section">
             <strong>PROJECT TEAM</strong>
             <ul class="team-list">
-                <li>• Pranit (318)</li>
-                <li>• Shubhang (316)</li>
-                <li>• Vaishnavi (303)</li>
-                <li>• Kanchana (315)</li>
+                <li>Akshith</li>
+                <li>Ansar</li>
+                <li>Karthik</li>
+                <li>UdayShankar</li>
             </ul>
         </div>
     </aside>
@@ -189,98 +269,114 @@
     <main class="main-content">
 
         <section id="intro">
+            <div class="hero-banner"></div>
             <h1>IPL Management System</h1>
             <p><strong>Mini-World Problem Statement</strong></p>
-            <p>The IPL (Indian Premier League) Management System database is designed to manage cricket teams, players, matches, and season statistics efficiently. It stores information about franchises, player roles, match venues, match results, and individual player performance statistics.</p>
-            <p>The database helps track which teams play against each other, who wins, and how specific players perform in each match. It ensures proper organization of data using relationships between entities like Teams, Players, and Matches. This design improves data consistency, enables easy retrieval of historical stats, and supports analysis of team performance across seasons.</p>
+            <p>The IPL (Indian Premier League) Management System database is a comprehensive solution designed to manage the complex ecosystem of cricket teams, players, matches, and seasonal statistics. This system serves as the backbone for organizing one of the world's most popular sporting leagues.</p>
+            <p>The database efficiently tracks the relationships between franchises (Teams), the cricketers who represent them (Players), and the outcomes of their encounters (Matches). By leveraging robust entity-relationship modeling, the system ensures data consistency and facilitates complex analytical queries regarding player performance, match results, and season standings.</p>
         </section>
 
         <section id="scope">
             <h2>Objectives of the System</h2>
             <ul>
-                <li>To store and manage Team and Player information securely.</li>
-                <li>To maintain details of Seasons, Matches, and Venues.</li>
-                <li>To track Player Statistics (runs, wickets) for every match.</li>
-                <li>To record Match Results, including the winner and margin of victory.</li>
-                <li>To ensure data consistency and enable complex analysis using a structured database.</li>
+                <li><strong>Data Integrity:</strong> To store and manage Team and Player information securely with proper constraints.</li>
+                <li><strong>Schedule Management:</strong> To maintain detailed records of Seasons, Match Dates, and Venues.</li>
+                <li><strong>Performance Tracking:</strong> To record individual Player Statistics (runs, wickets) for every single match.</li>
+                <li><strong>Outcome Recording:</strong> To track Match Results, identifying winners, win types (runs/wickets), and margins.</li>
+                <li><strong>Analysis:</strong> To enable complex SQL queries for deriving insights into team dominance and player form.</li>
             </ul>
 
             <h3>Scope of the Mini-World</h3>
             <ul>
-                <li>The system covers the management of IPL franchises (Teams) and their squads (Players).</li>
-                <li>It includes the storage of Match schedules and Season details (sponsors, years).</li>
-                <li>The mini-world tracks detailed Player Statistics for every match played.</li>
-                <li>It handles Match Results, including win types (Runs/Wickets) and margins.</li>
+                <li>The system covers the management of <strong>IPL Franchises</strong> and their respective <strong>Squads</strong>.</li>
+                <li>It includes the storage of <strong>Match Schedules</strong> and <strong>Season Details</strong> (sponsors, years).</li>
+                <li>The mini-world tracks detailed <strong>Player Statistics</strong> for every match played.</li>
+                <li>It handles <strong>Match Results</strong>, including win types and victory margins.</li>
             </ul>
         </section>
 
         <section id="entities">
             <h2>Description of Main Entities</h2>
+            <img src="https://images.unsplash.com/photo-1631194758628-71ec7c35137e?q=80&w=2070&auto=format&fit=crop" alt="Cricket Gear" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 20px;">
             <table>
                 <tr>
                     <th>Entity</th>
+                    <th>Attributes (from Diagram)</th>
                     <th>Description</th>
                 </tr>
                 <tr>
                     <td><strong>Team</strong></td>
-                    <td>Stores franchise info (Team_ID, Name, City, Coach).</td>
+                    <td>team_id, team_name, city, coach</td>
+                    <td>Represents the IPL franchise.</td>
                 </tr>
                 <tr>
                     <td><strong>Player</strong></td>
-                    <td>Represents cricketers (Player_ID, Name, Age, Role, Team_ID).</td>
+                    <td>player_id, player_name, age, role</td>
+                    <td>Represents individual cricketers. linked to a Team.</td>
                 </tr>
                 <tr>
                     <td><strong>Season</strong></td>
-                    <td>Contains season details (Season_ID, Year, Sponsor).</td>
+                    <td>season_id, year, sponsor</td>
+                    <td>Represents the tournament edition.</td>
                 </tr>
                 <tr>
                     <td><strong>Matches</strong></td>
-                    <td>Stores fixture details (Match_ID, Date, Venue, Season_ID).</td>
+                    <td>match_id, match_date, venue</td>
+                    <td>Represents a scheduled fixture between teams.</td>
                 </tr>
                 <tr>
                     <td><strong>Player_Stats</strong></td>
-                    <td>Tracks performance (Runs, Wickets) per match.</td>
+                    <td>stat_id, runs, wickets</td>
+                    <td>Weak entity recording performance in a specific match.</td>
+                </tr>
+                <tr>
+                    <td><strong>Match_Result</strong></td>
+                    <td>match_id, win_type, margin</td>
+                    <td>Stores the outcome of a match.</td>
                 </tr>
             </table>
 
             <h3>Relationship Description</h3>
-            <table>
-                <tr>
-                    <th>Relationship</th>
-                    <th>Cardinality</th>
-                    <th>Description</th>
-                </tr>
-                <tr><td>Team has Players</td><td>1:N</td><td>One Team consists of many Players.</td></tr>
-                <tr><td>Season has Matches</td><td>1:N</td><td>One Season contains multiple Matches.</td></tr>
-                <tr><td>Match involves Teams</td><td>M:N</td><td>Handled via Match_Team table.</td></tr>
-                <tr><td>Match produces Stats</td><td>1:N</td><td>One match generates stats for many players.</td></tr>
-            </table>
+            <ul>
+                <li><strong>Team ↔ Player (has):</strong> A Team has multiple Players (1:N). </li>
+                <li><strong>Team ↔ Match_Team (Participates):</strong> A Team participates in multiple Match_Team entries (1:N). </li>
+                <li><strong>Matches ↔ Match_Team (Participates):</strong> A Match includes multiple Match_Team entries (1:N). </li>
+                <li><strong>Team ↔ Match_Result (wins):</strong> A Team can win multiple Match Results (1:N). </li>
+                <li><strong>Season ↔ Matches (includes):</strong> A Season includes multiple Matches (1:N). </li>
+                <li><strong>Matches ↔ Match_Result (has_result):</strong> A Match corresponds to one Match Result (1:1). </li>
+                <li><strong>Matches ↔ Player_Stats (contains):</strong> A Match contains statistics for many Players (1:N). </li>
+                <li><strong>Player ↔ Player_Stats (records):</strong> A Player records statistics across multiple Matches (1:N). </li>
+            </ul>
         </section>
 
         <section id="er-model">
             <h2>ER Model Design</h2>
-            <div class="er-placeholder">
-                [ PLACE ER DIAGRAM IMAGE HERE ]
+            <p>The following Entity-Relationship diagram illustrates the logical structure of the database.</p>
+            
+            <div class="er-container">
+                <img src="WhatsApp Image 2026-01-06 at 10.38.51 AM.jpeg" alt="IPL ER Diagram">
             </div>
-            <p><strong>Justification:</strong> This mini-world effectively demonstrates multiple real-world entities, One-to-Many relationships (Team-Player), and Many-to-Many relationships (Match-Teams).</p>
+            
+            <p><strong>Justification:</strong> This design captures the dynamic nature of cricket. It separates static data (Player info) from dynamic data (Player Stats per match) and effectively links Matches to Seasons and Results.</p>
         </section>
 
         <section id="schema">
             <h2>Relational Schema</h2>
+            <p>Based on the ER Diagram above, here is the normalized relational schema:</p>
             <ul>
-                <li><strong>TEAM:</strong> (Team_ID, Team_Name, City, Coach)</li>
-                <li><strong>PLAYER:</strong> (Player_ID, Player_Name, Age, Role, Team_ID)</li>
-                <li><strong>SEASON:</strong> (Season_ID, Year, Sponsor)</li>
-                <li><strong>MATCHES:</strong> (Match_ID, Match_Date, Venue, Season_ID)</li>
-                <li><strong>MATCH_TEAM:</strong> (Match_ID, Team_ID)</li>
-                <li><strong>PLAYER_STATS:</strong> (Stat_ID, Player_ID, Match_ID, Runs, Wickets)</li>
-                <li><strong>MATCH_RESULT:</strong> (Match_ID, Winner_Team_ID, Win_Type, Margin)</li>
+                <li><strong>TEAM:</strong> (<u>team_id</u>, team_name, city, coach)</li>
+                <li><strong>PLAYER:</strong> (<u>player_id</u>, player_name, age, role, <em>team_id</em>)</li>
+                <li><strong>SEASON:</strong> (<u>season_id</u>, year, sponsor)</li>
+                <li><strong>MATCHES:</strong> (<u>match_id</u>, match_date, venue, <em>season_id</em>)</li>
+                <li><strong>MATCH_TEAM:</strong> (<u>match_id, team_id</u>) <span style="font-size:0.8em; color:#666;">*Derived from 'Participates' M:N relationship</span></li>
+                <li><strong>PLAYER_STATS:</strong> (<u>stat_id</u>, runs, wickets, <em>player_id</em>, <em>match_id</em>)</li>
+                <li><strong>MATCH_RESULT:</strong> (<u>match_id</u>, win_type, margin, <em>winner_team_id</em>)</li>
             </ul>
         </section>
 
         <section id="creation">
-            <h2>Database Creation</h2>
-            <p>Below is the SQL code used to construct the database.</p>
+            <h2>Database Creation Code</h2>
+            <p>SQL Data Definition Language (DDL) used to construct the IPL Database:</p>
 <pre><code><span class="keyword">CREATE TABLE</span> Team (
     team_id <span class="keyword">NUMBER PRIMARY KEY</span>,
     team_name <span class="keyword">VARCHAR2</span>(50),
@@ -311,12 +407,48 @@
     <span class="keyword">CONSTRAINT</span> fk_match_season <span class="keyword">FOREIGN KEY</span> (season_id) <span class="keyword">REFERENCES</span> Season(season_id)
 );
 
--- (Additional tables Match_Team, Player_Stats, Match_Result included in source code)</span></code></pre>
+<span class="keyword">CREATE TABLE</span> Match_Team (
+    match_id <span class="keyword">NUMBER</span>,
+    team_id <span class="keyword">NUMBER</span>,
+    <span class="keyword">CONSTRAINT</span> pk_match_team <span class="keyword">PRIMARY KEY</span> (match_id, team_id),
+    <span class="keyword">CONSTRAINT</span> fk_mt_match <span class="keyword">FOREIGN KEY</span> (match_id) <span class="keyword">REFERENCES</span> Matches(match_id),
+    <span class="keyword">CONSTRAINT</span> fk_mt_team <span class="keyword">FOREIGN KEY</span> (team_id) <span class="keyword">REFERENCES</span> Team(team_id)
+);
+
+<span class="keyword">CREATE TABLE</span> Player_Stats (
+    stat_id <span class="keyword">NUMBER PRIMARY KEY</span>,
+    player_id <span class="keyword">NUMBER NOT NULL</span>,
+    match_id <span class="keyword">NUMBER NOT NULL</span>,
+    runs <span class="keyword">NUMBER</span>,
+    wickets <span class="keyword">NUMBER</span>,
+    <span class="keyword">CONSTRAINT</span> fk_ps_player <span class="keyword">FOREIGN KEY</span> (player_id) <span class="keyword">REFERENCES</span> Player(player_id),
+    <span class="keyword">CONSTRAINT</span> fk_ps_match <span class="keyword">FOREIGN KEY</span> (match_id) <span class="keyword">REFERENCES</span> Matches(match_id)
+);
+
+<span class="keyword">CREATE TABLE</span> Match_Result (
+    match_id <span class="keyword">NUMBER PRIMARY KEY</span>,
+    winner_team_id <span class="keyword">NUMBER NOT NULL</span>,
+    win_type <span class="keyword">VARCHAR2</span>(20),
+    margin <span class="keyword">NUMBER</span>,
+    <span class="keyword">CONSTRAINT</span> fk_mr_match <span class="keyword">FOREIGN KEY</span> (match_id) <span class="keyword">REFERENCES</span> Matches(match_id),
+    <span class="keyword">CONSTRAINT</span> fk_mr_team <span class="keyword">FOREIGN KEY</span> (winner_team_id) <span class="keyword">REFERENCES</span> Team(team_id)
+);
+
+<span class="keyword">-- INSERTING ADDITIONAL DATA FOR SPECIFIC QUERIES --</span>
+
+<span class="keyword">-- For Q30 (runs > own average)</span>
+<span class="keyword">INSERT INTO</span> Player_Stats <span class="keyword">VALUES</span> (309, 103, 203, 30, 0);
+
+<span class="keyword">-- For Q10 (50+ runs AND ≥1 wicket)</span>
+<span class="keyword">INSERT INTO</span> Player_Stats <span class="keyword">VALUES</span> (310, 104, 204, 55, 2);
+
+<span class="keyword">-- For Q31 (never scored runs)</span>
+<span class="keyword">INSERT INTO</span> Player_Stats <span class="keyword">VALUES</span> (311, 109, 201, 0, 0);</span></code></pre>
         </section>
 
         <section id="queries">
             <h2>SQL Queries Implementation</h2>
-            <p>This section contains all 35 required queries covering Joins, Operators, Group By, and Subqueries.</p>
+            <p>Below are 35 distinct queries demonstrating various SQL capabilities including Joins, Aggregations, and Nested Subqueries.</p>
 
             <h3>I. Multiple Table JOIN Operations</h3>
             
